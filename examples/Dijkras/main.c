@@ -30,14 +30,23 @@ void setup() {
     add_node(graph, 20);
     add_node(graph, 13);
 
-    add_edge()
+    add_edge(graph, search_node(graph, 12), search_node(graph, 21), 1);
+    add_edge(graph, search_node(graph, 12), search_node(graph, 13), 2);
+
+    add_edge(graph, search_node(graph, 21), search_node(graph, 12), 1);
 
 
     for (int i = 0; i < graph->size; i++) {
         printf("%d -> ", graph->arr[i]->key);
+        for (int j = 0; j < graph->arr[i]->adj_len; j++) {
+            printf("%d(%d), ", graph->arr[i]->adj[j]->next->key, graph->arr[i]->adj[j]->weight);
+        }
+        printf("\n");
     }
 
     printf("\n");
+
+    exit(0);
 }
 
 void display()

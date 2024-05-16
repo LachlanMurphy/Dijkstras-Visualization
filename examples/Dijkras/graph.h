@@ -18,7 +18,7 @@ struct Node {
     key_t key;
 
     // array of adjacent nodes
-    struct Edge* adj;
+    struct Edge** adj;
     unsigned int adj_len;
     unsigned int adj_capacity;
 
@@ -42,5 +42,6 @@ void remove_edge(struct Graph* graph, key_t key1, key_t key2);
 
 struct Node* search_node(struct Graph* graph, key_t key);
 
+void array_double(void* arr, int* size);
 
 #endif // GRAPH_H

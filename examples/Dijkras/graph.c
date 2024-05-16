@@ -13,9 +13,9 @@ void add_node(struct Graph* graph, key_t key) {
 
     // array double
     if (graph->capacity == graph->size) {
-        struct Graph* tmp = realloc(graph, graph->capacity * 2);
+        struct Node** tmp = realloc(graph->arr, graph->capacity * 2 * sizeof(struct Node *));
         if (tmp) {
-            graph = tmp;
+            graph->arr = tmp;
             graph->capacity *= 2;
         } else {
             perror("Realloc error in array double.\n");
@@ -29,24 +29,37 @@ void add_node(struct Graph* graph, key_t key) {
     if (!temp)
         perror("malloc error in add_node\n");
     
+    // initalize data
     temp->key = key;
+
+    // init array
+    temp->adj = (struct Edge **) malloc( sizeof(struct Edge *) );
+    temp->adj_capacity = 1;
+    temp->adj_len = 0;
 
     // add node to graph
     graph->arr[graph->size++] = temp;
 }
 
 void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight) {
-    // edge from n1 to n2
+
+    // init data
     struct Edge* edge1 = (struct Edge *) malloc( sizeof(struct Edge) );
     edge1->next = n2;
     edge1->weight = weight;
 
-    struct Edge* edge2 = (struct Edge *) malloc( sizeof(struct Edge) );
-    edge2->next = n1;
-    edge2->weight = weight;
-
+    // add to edge 2 array
     
+    if (n1->adj_capacity == n1->adj_len) {
+        n1 = realloc(n1, n1->adj_len * 2 * sizeof(struct Edge *));
 
+        if (!n1)
+            perror("realloc error in array double");
+        
+        n1->adj_capacity *= 2;
+    }
+
+    n1->adj[n1->adj_len++] = edge1;
 }
 
 void remove_node(struct Graph* graph, key_t key) {
@@ -63,6 +76,5 @@ struct Node* search_node(struct Graph* graph, key_t key) {
         if (graph->arr[i]->key == key)
             return graph->arr[i];
     }
-
     return NULL;
 }
