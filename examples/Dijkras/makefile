@@ -4,5 +4,5 @@ DEPS   = ../lgraph/lgraph.h
 LIBS   = -lm
 
 build:
-	$(CC) -o run main.c graph.c $(CFLAGS) $(LIBS)
+	$(CC) -o run main.c graph.c LL.c $(CFLAGS) $(LIBS)
 

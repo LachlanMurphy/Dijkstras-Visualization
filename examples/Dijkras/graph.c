@@ -2,26 +2,10 @@
 
 
 void init_graph(struct Graph* graph) {
-    graph->arr = (struct Node **) malloc( sizeof(struct Node *) );
-    graph->capacity = 1;
-    graph->size = 0;
+    graph->LL = NULL;
 }
 
 void add_node(struct Graph* graph, key_t key) {
-    // normal array doubling and add to array
-    
-
-    // array double
-    if (graph->capacity == graph->size) {
-        struct Node** tmp = realloc(graph->arr, graph->capacity * 2 * sizeof(struct Node *));
-        if (tmp) {
-            graph->arr = tmp;
-            graph->capacity *= 2;
-        } else {
-            perror("Realloc error in array double.\n");
-        }
-        tmp = NULL;
-    }
 
     // create new Node
     struct Node* temp = (struct Node *) malloc( sizeof(struct Node) );
@@ -32,13 +16,11 @@ void add_node(struct Graph* graph, key_t key) {
     // initalize data
     temp->key = key;
 
-    // init array
-    temp->adj = (struct Edge **) malloc( sizeof(struct Edge *) );
-    temp->adj_capacity = 1;
-    temp->adj_len = 0;
+    // init adjacency list
+    temp->adj = NULL;
 
     // add node to graph
-    graph->arr[graph->size++] = temp;
+    graph->LL = LL_add_node(graph->LL, temp);
 }
 
 void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight) {
@@ -48,33 +30,74 @@ void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight)
     edge1->next = n2;
     edge1->weight = weight;
 
-    // add to edge 2 array
+    // add to edge 2 adj LL
     
-    if (n1->adj_capacity == n1->adj_len) {
-        n1 = realloc(n1, n1->adj_len * 2 * sizeof(struct Edge *));
+    n1->adj = LL_add_node(n1->adj, edge1);
+}
 
-        if (!n1)
-            perror("realloc error in array double");
-        
-        n1->adj_capacity *= 2;
+void remove_node(struct Graph* graph, struct Node* node) {
+    // deallocate the adj LL
+    LL_deconstruct(node->adj);
+
+    // remove data from graph's LL
+    struct LL_node* crawler = graph->LL;
+    while (crawler) {
+        if (crawler->data == node) {
+            // deallocate
+            free(crawler->data);
+
+            // move pointers around
+            LL_remove_node(graph->LL, crawler);
+            break;
+        }
     }
-
-    n1->adj[n1->adj_len++] = edge1;
 }
 
-void remove_node(struct Graph* graph, key_t key) {
+void remove_edge(struct Graph* graph, struct Node* n1, struct Node* n2) {
 
-}
+    // find edge in LL and remove
+    struct LL_node* crawler = n1->adj;
+    while (crawler) {
+        struct Edge* tmp = (struct Edge *) crawler->data;
+        if (tmp->next == n2) {
+            // remove this edge
+            free(tmp);
 
-void remove_edge(struct Graph* graph, key_t key1, key_t key2) {
-
+            LL_remove_node(n1->adj, crawler);
+            break;
+        }
+    }
 }
 
 struct Node* search_node(struct Graph* graph, key_t key) {
-    int s = graph->size;
-    for (int i = 0; i < s; i++) {
-        if (graph->arr[i]->key == key)
-            return graph->arr[i];
+    struct LL_node* crawler = graph->LL;
+    while (crawler) {
+        struct Node* tmp = (struct Node *) crawler->data;
+        if (tmp->key == key)
+            return tmp;
+        
+        crawler = crawler->next;
     }
+
     return NULL;
+}
+
+void print_graph(struct Graph* graph) {
+    struct LL_node* node_crawler = graph->LL;
+    while (node_crawler) {
+        struct Node* node = (struct Node *) node_crawler->data;
+        printf("%d -> ", node->key);
+
+        struct LL_node* edge_crawler = node->adj;
+        while (edge_crawler) {
+            struct Edge* edge = (struct Edge *) edge_crawler->data;
+
+            printf("%d, ", edge->next->key);
+
+            edge_crawler = edge_crawler->next;
+        }
+        printf("\n");
+
+        node_crawler = node_crawler->next;
+    }
 }
