@@ -27,6 +27,8 @@ void setup() {
     add_node(graph, 21);
     add_node(graph, 20);
     add_node(graph, 13);
+    add_node(graph, 14);
+    add_node(graph, 15);
 
     add_edge(graph, search_node(graph, 12), search_node(graph, 21), 1);
     add_edge(graph, search_node(graph, 12), search_node(graph, 13), 2);

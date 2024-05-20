@@ -20,12 +20,17 @@ void add_node(struct Graph* graph, key_t key) {
     // initalize data
     temp->key = key;
     temp->adj = NULL;
+    temp->x = 0;
+    temp->y = 0;
+    temp->r = 10;
 
     // add node to graph
     graph->LL = LL_add_node(graph->LL, temp);
 
     // increment node counter
     graph->num_nodes++;
+
+    set_node_pos(graph);
 }
 
 void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight) {
@@ -142,8 +147,68 @@ void destruct_graph(struct Graph* graph) {
 void display_graph(struct Graph* graph) {
 
     // loop through each node and display
-    // struct LL_node* node_crawler = graph->LL;
-    // while (node_crawler) {
-    //     l_circle()
-    // }
+    struct LL_node* node_crawler = graph->LL;
+    while (node_crawler) {
+
+        struct Node* node = (struct Node *) node_crawler->data;
+        l_circle(node->x, node->y, node->r);
+
+        // now display the node's edges
+        for (struct LL_node* edge_crawler = node->adj; edge_crawler; edge_crawler = edge_crawler->next) {
+            struct Node* edge_node = ((struct Edge *) edge_crawler->data)->next;
+            
+            display_edge(node, edge_node);
+        }
+
+        node_crawler = node_crawler->next;
+    }
+}
+
+void display_edge(struct Node* n1, struct Node* n2) {
+    float x1 = n1->x;
+    float y1 = n1->y;
+    float x2 = n2->x;
+    float y2 = n2->y;
+
+    float a = (y2 - y1) / (x2 - x1);
+
+    // TODO: Make arrows that connect the nodes
+
+    l_line(n1->x, n1->y, n2->x, n2->y);
+}
+
+void set_node_pos(struct Graph* graph) {
+    int columns = 1;
+    int rows = 1;
+
+    // Calculate the number of rows and columns
+    while (columns * rows < graph->num_nodes) {
+        if (WIDTH / (columns + 1) >= HEIGHT / (rows + 1)) {
+            columns++;
+        } else {
+            rows++;
+        }
+    }
+    
+    // Calculate the gap between points
+    int xGap = WIDTH / (columns + 1);
+    int yGap = HEIGHT / (rows + 1);
+    
+    // Distribute points
+    int col, row;
+    struct LL_node* crawler = graph->LL;
+    for (row = 1; row <= rows; row++) {
+        for (col = 1; col <= columns; col++) {
+            if (!crawler) {
+                return;
+            }
+            
+            struct Node* node = (struct Node *) crawler->data;
+            node->x = col * xGap;
+            node->y = row * yGap;
+            crawler = crawler->next;
+        }
+        printf("\n");
+    }
+    printf("\n\n");
 }

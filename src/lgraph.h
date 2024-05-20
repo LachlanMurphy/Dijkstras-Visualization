@@ -35,6 +35,8 @@ void l_line(float x1, float y1, float x2, float y2);
 
 void l_circle(float cx, float cy, float r);
 
+void l_arc(int cx, int cy, float r, float start_angle, float end_angle);
+
 int main(int argc, char* argv[]);
 
 #endif // LGRAPH_H

@@ -54,6 +54,19 @@ void l_circle(float cx, float cy, float r) {
     glEnd();
 }
 
+void l_arc(int cx, int cy, float r, float start_angle, float end_angle) {
+    glBegin(GL_LINE_STRIP);
+    float da = (end_angle - start_angle) / 60;
+    for (float a = start_angle; a <= end_angle; a += da) {
+        float x = r * cosf(a);
+        float y = r * sinf(a);
+        glVertex2f(x + cx, y + cy);
+    }
+    glEnd();
+}
+
+
+
 int main(int argc, char* argv[])
 {
     setup();

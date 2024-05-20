@@ -79,5 +79,9 @@ void destruct_graph(struct Graph* graph);
 
 void display_graph(struct Graph* graph);
 
+void display_edge(struct Node* n1, struct Node* n2);
+
+void set_node_pos(struct Graph* graph);
+
 
 #endif // GRAPH_H
