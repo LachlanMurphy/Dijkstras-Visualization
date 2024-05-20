@@ -26,7 +26,7 @@ struct LL_node* LL_add_node(struct LL_node* root, void* data) {
 }
 
 
-void LL_remove_node(struct LL_node* root, struct LL_node* node) {
+struct LL_node* LL_remove_node(struct LL_node* root, struct LL_node* node) {
     // find node to remove
 
     struct LL_node* crawler = root;
@@ -39,7 +39,7 @@ void LL_remove_node(struct LL_node* root, struct LL_node* node) {
     
     // if node doesnt exist
     if (!crawler)
-        return;
+        perror("Node not found in LL_remove_node\n");
     
     // if root
     if (root == crawler) {
@@ -51,6 +51,8 @@ void LL_remove_node(struct LL_node* root, struct LL_node* node) {
     // free memory
     free(crawler);
     crawler = NULL;
+
+    return root;
 }
 
 void LL_deconstruct(struct LL_node* root) {
@@ -61,4 +63,13 @@ void LL_deconstruct(struct LL_node* root) {
 
         free(temp);
     }
+}
+
+void LL_print_list(struct LL_node* root) {
+    struct LL_node* crawler = root;
+    while (crawler) {
+        printf("%p -> ", crawler);
+        crawler = crawler->next;
+    }
+    printf("NULL\n");
 }

@@ -10,8 +10,6 @@
 #define PI 3.141592654
 #define LEN 5
 
-extern unsigned int WIDTH;
-extern unsigned int HEIGHT;
 
 struct Graph* graph;
 
@@ -33,21 +31,14 @@ void setup() {
     add_edge(graph, search_node(graph, 12), search_node(graph, 21), 1);
     add_edge(graph, search_node(graph, 12), search_node(graph, 13), 2);
     add_edge(graph, search_node(graph, 21), search_node(graph, 12), 1);
-
-
-    print_graph(graph);
-
-    remove_edge(graph, search_node(graph, 12), search_node(graph, 21));
-    remove_edge(graph, search_node(graph, 21), search_node(graph, 12));
-    remove_edge(graph, search_node(graph, 12), search_node(graph, 13));
-
-    remove_node(graph, search_node(graph, 12));
-    remove_node(graph, search_node(graph, 21));
-    remove_node(graph, search_node(graph, 20));
-    remove_node(graph, search_node(graph, 13));
 }
 
 void display()
 {
-    exit(0);
+    display_graph(graph);
+}
+
+void onExit() {
+    destruct_graph(graph);
+    print_graph(graph);
 }

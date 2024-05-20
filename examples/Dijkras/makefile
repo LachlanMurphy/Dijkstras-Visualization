@@ -1,8 +1,8 @@
 CC     = gcc
 CFLAGS = -Wall -lglut -lGL -g
-DEPS   = ../lgraph/lgraph.h
+DEPS   = ../../src/lgraph.h
 LIBS   = -lm
 
 build:
-	$(CC) -o run main.c graph.c LL.c $(CFLAGS) $(LIBS)
+	$(CC) -o run $(DEPS) main.c graph.c LL.c ../../src/lgraph.c $(CFLAGS) $(LIBS)
 
