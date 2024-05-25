@@ -32,7 +32,10 @@ void setup() {
 
     add_edge(graph, search_node(graph, 12), search_node(graph, 21), 1);
     add_edge(graph, search_node(graph, 12), search_node(graph, 13), 2);
+    add_edge(graph, search_node(graph, 13), search_node(graph, 12), 2);
     add_edge(graph, search_node(graph, 21), search_node(graph, 12), 1);
+    add_edge(graph, search_node(graph, 12), search_node(graph, 15), 1);
+    add_edge(graph, search_node(graph, 15), search_node(graph, 12), 1);
 }
 
 void display()
@@ -41,6 +44,6 @@ void display()
 }
 
 void onExit() {
-    destruct_graph(graph);
-    print_graph(graph);
+    // destruct_graph(graph);
+    // print_graph(graph);
 }

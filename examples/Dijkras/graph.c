@@ -170,9 +170,26 @@ void display_edge(struct Node* n1, struct Node* n2) {
     float x2 = n2->x;
     float y2 = n2->y;
 
-    float a = (y2 - y1) / (x2 - x1);
+    float a;
+    if (x2 - x1 == 0) {
+        if (y1 < y2) {
+            a = PI / 2.0f;
+        } else {
+            a = -PI / 2.0f;
+        }
+    } else {
+        if (x1 < x2) {
+            a = (y1 - y2) / (x1 - x2);
+        } else {
+            a = (y1 - y2) / (x1 - x2) + PI;
+        }
+    }
 
-    // TODO: Make arrows that connect the nodes
+    float px = x2 - cos(a) * n2->r; 
+    float py = y2 - sin(a) * n2->r;
+
+    l_line(px,py, px-30.0f*cos(a + PI/6.0f), py-30.0f*sin(a + PI/6.0f));
+    l_line(px,py, px-30.0f*cos(a - PI/6.0f), py-30.0f*sin(a - PI/6.0f));
 
     l_line(n1->x, n1->y, n2->x, n2->y);
 }
@@ -208,7 +225,5 @@ void set_node_pos(struct Graph* graph) {
             node->y = row * yGap;
             crawler = crawler->next;
         }
-        printf("\n");
     }
-    printf("\n\n");
 }
