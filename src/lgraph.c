@@ -3,6 +3,9 @@
 unsigned int WIDTH = 0;
 unsigned int HEIGHT = 0;
 
+int mousex = 0;
+int mousey = 0;
+
 void size(int w, int h) {
     WIDTH = w;
     HEIGHT = h;
@@ -10,9 +13,18 @@ void size(int w, int h) {
 
 void l_init(int* argc, char* argv[]) {
     glutInit(argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Hello World");
     glutDisplayFunc(drive);
+    glutKeyboardFunc(keypressed);
+    glutMouseFunc(mouseUpdate);
+
+    // update mouse position when mouse is not pressed and when it is pressed
+    glutPassiveMotionFunc(update_mouse_pos);
+    glutMotionFunc(update_mouse_pos);
+
+    // runs when the program terminates
     atexit(onExit);
     
     // make 0,0 top left and y increase down
@@ -22,6 +34,11 @@ void l_init(int* argc, char* argv[]) {
     // glScalef(1.f, -1.f, 1.f);
 
     glutMainLoop();
+}
+
+void update_mouse_pos(int x, int y) {
+    mousex = x;
+    mousey = y;
 }
 
 void l_color(unsigned char red,
@@ -66,6 +83,14 @@ void l_arc(int cx, int cy, float r, float start_angle, float end_angle) {
 }
 
 
+// support functions
+double dis(double x1, double y1, double x2, double y2) {
+    double square_difference_x = (x2 - x1) * (x2 - x1);
+    double square_difference_y = (y2 - y1) * (y2 - y1);
+    double sum = square_difference_x + square_difference_y;
+    double value = sqrt(sum);
+    return value;
+}
 
 int main(int argc, char* argv[])
 {

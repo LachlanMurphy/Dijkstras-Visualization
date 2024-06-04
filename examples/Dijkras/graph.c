@@ -170,26 +170,18 @@ void display_edge(struct Node* n1, struct Node* n2) {
     float x2 = n2->x;
     float y2 = n2->y;
 
-    float a;
-    if (x2 - x1 == 0) {
-        if (y1 < y2) {
-            a = PI / 2.0f;
-        } else {
-            a = -PI / 2.0f;
-        }
-    } else {
-        if (x1 < x2) {
-            a = (y1 - y2) / (x1 - x2);
-        } else {
-            a = (y1 - y2) / (x1 - x2) + PI;
-        }
-    }
+    float h = sqrt((y1 - y2) * (y1 - y2) + (x1 - x2) * (x1 - x2));
 
-    float px = x2 - cos(a) * n2->r; 
-    float py = y2 - sin(a) * n2->r;
+    float px = x2 + ((x1 - x2) / h) * n2->r; 
+    float py = y2 + ((y1 - y2) / h) * n2->r;
 
-    l_line(px,py, px-30.0f*cos(a + PI/6.0f), py-30.0f*sin(a + PI/6.0f));
-    l_line(px,py, px-30.0f*cos(a - PI/6.0f), py-30.0f*sin(a - PI/6.0f));
+    float val = 1.0f / sqrt(3.0f);
+
+    float a = atan2(y1-y2, x1-x2) + PI;
+
+    l_line(px,py, px-30.0f*cosf(a - val), py-30.0f*sinf(a - val));
+    l_line(px,py, px-30.0f*cosf(a + val), py-30.0f*sinf(a + val));
+    
 
     l_line(n1->x, n1->y, n2->x, n2->y);
 }
@@ -227,3 +219,29 @@ void set_node_pos(struct Graph* graph) {
         }
     }
 }
+
+struct Node* get_clicked(struct Graph* graph, int x, int y) {
+    for (struct LL_node* crawler = graph->LL; crawler; crawler = crawler->next) {
+        struct Node* node = (struct Node *) crawler->data;
+
+        if (dis(x,y,node->x, node->y) <= node->r) {
+            return node;
+        }
+    }
+    return NULL;
+}
+
+ int edge_exist(struct Node* n1, struct Node* n2) {
+    for (struct LL_node* crawler = n1->adj; crawler; crawler = crawler->next) {
+        struct Edge* edge = (struct Edge *) crawler->data;
+        if (edge->next == n2)
+            return 1;
+    }
+
+    return 0;
+}
+
+// ##########################################
+// MANIPULATE STRUCTURE OF GRAPH
+// ##########################################
+

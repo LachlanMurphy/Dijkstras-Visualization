@@ -77,11 +77,19 @@ void destruct_graph(struct Graph* graph);
 // START OF VISUAL FUNCTIONS
 // ##########################################
 
+// displays all nodes and edges to screen
 void display_graph(struct Graph* graph);
 
+// displays an edge
 void display_edge(struct Node* n1, struct Node* n2);
 
+// called every time a node is added, resets all the screen positions of the nodes
 void set_node_pos(struct Graph* graph);
 
+// gets the node clicked on. returns null if no nodes clicked on.
+struct Node* get_clicked(struct Graph* graph, int x, int y);
+
+// checks if an edge exists between two edges
+int edge_exist(struct Node* n1, struct Node* n2);
 
 #endif // GRAPH_H
