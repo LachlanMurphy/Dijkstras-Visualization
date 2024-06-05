@@ -2,11 +2,16 @@
 #define LGRAPH_H
 
 #include <stdio.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 
 #define PI     3.141592654
 #define TWO_PI 6.283185307
+
+#define true 1
+#define false 0
+
+typedef unsigned char bool;
 
 extern unsigned int WIDTH;
 extern unsigned int HEIGHT;
@@ -20,6 +25,7 @@ void display();
 void setup();
 void onExit();
 void keypressed(unsigned char c, int x, int y);
+void keyup(unsigned char c, int x, int y);
 void mouseUpdate(int button, int mouse_up, int x, int y);
 
 static void drive() {
@@ -48,6 +54,8 @@ void l_line(float x1, float y1, float x2, float y2);
 void l_circle(float cx, float cy, float r);
 
 void l_arc(int cx, int cy, float r, float start_angle, float end_angle);
+
+void l_text(float x, float y, char *format,...);
 
 double dis(double x1, double y1, double x2, double y2);
 

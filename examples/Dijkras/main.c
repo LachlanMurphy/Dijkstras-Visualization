@@ -9,10 +9,14 @@
 
 #define PI 3.141592654
 
-
 struct Graph* graph;
 
 struct Node* connect = NULL;
+
+
+bool del = false;
+
+int next_id = 0;
 
 void setup() {
     size(500,500);
@@ -48,6 +52,8 @@ void display()
         l_line(connect->x, connect->y, mousex, mousey);
         // printf("(%d,%d) (%d,%d)\n", connect->x, connect->y, mousex, mousey);
     }
+    // l_text(WIDTH/2-100, HEIGHT/2, "HELLO WORLD %d", 10);
+
 }
 
 void onExit() {
@@ -58,7 +64,19 @@ void onExit() {
 void keypressed(unsigned char c, int x, int y) {
     switch (c) {
         case '+': {
-            add_node(graph, graph->num_nodes);
+            add_node(graph, next_id++);
+        } break;
+        case '\b': {
+            del = true;
+        } break;
+    }
+}
+
+void keyup(unsigned char c, int x, int y) {
+    switch (c)
+    {
+    case '\b':{
+            del = false;
         } break;
     }
 }
@@ -66,12 +84,18 @@ void keypressed(unsigned char c, int x, int y) {
 void mouseUpdate(int button, int mouse_up, int x, int y) {
     struct Node* clicked = get_clicked(graph, x, y);
 
+    if (del && clicked && !mouse_up) {
+        remove_node(graph, clicked);
+        return;
+    }
+
     if (clicked && !mouse_up) {
         connect = clicked;
     }
 
     if (mouse_up && connect) {
-        if (clicked) {
+        if (clicked && connect != clicked) {
+            
             if (edge_exist(connect, clicked))
                 remove_edge(graph, connect, clicked);
             else

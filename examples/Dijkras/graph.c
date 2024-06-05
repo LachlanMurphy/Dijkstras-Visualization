@@ -22,7 +22,7 @@ void add_node(struct Graph* graph, key_t key) {
     temp->adj = NULL;
     temp->x = 0;
     temp->y = 0;
-    temp->r = 10;
+    temp->r = 30;
 
     // add node to graph
     graph->LL = LL_add_node(graph->LL, temp);
@@ -45,6 +45,24 @@ void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight)
 }
 
 void remove_node(struct Graph* graph, struct Node* node) {
+    // first remove all occurances of this node in other's edges
+    for (struct LL_node* node_crawler = graph->LL; node_crawler; node_crawler = node_crawler->next) {
+        struct Node* n = (struct Node *) node_crawler->data;
+        
+        // no need to check itself
+        if (n == node)
+            continue;
+        
+        for (struct LL_node* edge_crawler = n->adj; edge_crawler; edge_crawler = edge_crawler->next) {
+            struct Edge* edge = (struct Edge *) edge_crawler->data;
+
+            if (edge->next == node) {
+                remove_edge(graph, n, node);
+                break;
+            }
+        }
+    }
+
     // deallocate the adj LL
     LL_deconstruct(node->adj);
 
@@ -59,11 +77,16 @@ void remove_node(struct Graph* graph, struct Node* node) {
             graph->LL = LL_remove_node(graph->LL, crawler);
             break;
         }
+
+        crawler = crawler->next;
     }
 
     // decrement number of nodes
     if (crawler)
         graph->num_nodes--;
+    
+    // reposition the rest of the nodes
+    set_node_pos(graph);
 }
 
 void remove_edge(struct Graph* graph, struct Node* n1, struct Node* n2) {
@@ -152,6 +175,10 @@ void display_graph(struct Graph* graph) {
 
         struct Node* node = (struct Node *) node_crawler->data;
         l_circle(node->x, node->y, node->r);
+
+        l_color(0,0,255,0);
+        l_text(node->x, node->y, "%d", node->key);
+        l_color(255, 255, 255, 0);
 
         // now display the node's edges
         for (struct LL_node* edge_crawler = node->adj; edge_crawler; edge_crawler = edge_crawler->next) {

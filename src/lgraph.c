@@ -18,6 +18,7 @@ void l_init(int* argc, char* argv[]) {
     glutCreateWindow("Hello World");
     glutDisplayFunc(drive);
     glutKeyboardFunc(keypressed);
+    glutKeyboardUpFunc(keyup);
     glutMouseFunc(mouseUpdate);
 
     // update mouse position when mouse is not pressed and when it is pressed
@@ -80,6 +81,27 @@ void l_arc(int cx, int cy, float r, float start_angle, float end_angle) {
         glVertex2f(x + cx, y + cy);
     }
     glEnd();
+}
+
+// printing text
+void l_text(float x, float y, char *format,...) {
+    va_list args;
+    char buffer[200], *p;
+
+    va_start(args, format);
+    vsprintf(buffer, format, args);
+    va_end(args);
+    glPushMatrix();
+    int str_width = 0;
+    int str_height = glutStrokeHeight(GLUT_STROKE_MONO_ROMAN);
+    for (p = buffer; *p; p++) {
+        str_width += glutStrokeWidth(GLUT_STROKE_MONO_ROMAN, *p);\
+    }
+    glTranslatef(x-str_width*0.3/2, y+str_height*0.3/2, 0);
+    glScalef(0.3, -0.3, 0.3);
+    for (p = buffer; *p; p++)
+    glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *p);
+    glPopMatrix();
 }
 
 
