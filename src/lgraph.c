@@ -20,6 +20,7 @@ void l_init(int* argc, char* argv[]) {
     glutKeyboardFunc(keypressed);
     glutKeyboardUpFunc(keyup);
     glutMouseFunc(mouseUpdate);
+    // glClearColor(0.5, 0.5, 0.5, 0);
 
     // update mouse position when mouse is not pressed and when it is pressed
     glutPassiveMotionFunc(update_mouse_pos);
@@ -81,6 +82,10 @@ void l_arc(int cx, int cy, float r, float start_angle, float end_angle) {
         glVertex2f(x + cx, y + cy);
     }
     glEnd();
+}
+
+void l_background(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+    glClearColor(r/255.0f, g/255.0f, b/255.0f, a/255.0f);
 }
 
 // printing text

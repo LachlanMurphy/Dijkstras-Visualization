@@ -55,6 +55,8 @@ void l_circle(float cx, float cy, float r);
 
 void l_arc(int cx, int cy, float r, float start_angle, float end_angle);
 
+void l_background(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+
 void l_text(float x, float y, char *format,...);
 
 double dis(double x1, double y1, double x2, double y2);

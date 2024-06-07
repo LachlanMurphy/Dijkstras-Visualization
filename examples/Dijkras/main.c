@@ -13,10 +13,10 @@ struct Graph* graph;
 
 struct Node* connect = NULL;
 
-
 bool del = false;
 
 int next_id = 0;
+int next_edge = 0;
 
 void setup() {
     size(500,500);
@@ -46,14 +46,13 @@ void setup() {
 void display()
 {
     display_graph(graph);
+    l_background(100, 100, 100, 0);
 
     if (connect) {
         l_color(255, 255, 255, 0);
+        l_color(connect->col[0], connect->col[1], connect->col[2], 0);
         l_line(connect->x, connect->y, mousex, mousey);
-        // printf("(%d,%d) (%d,%d)\n", connect->x, connect->y, mousex, mousey);
     }
-    // l_text(WIDTH/2-100, HEIGHT/2, "HELLO WORLD %d", 10);
-
 }
 
 void onExit() {
@@ -99,7 +98,7 @@ void mouseUpdate(int button, int mouse_up, int x, int y) {
             if (edge_exist(connect, clicked))
                 remove_edge(graph, connect, clicked);
             else
-                add_edge(graph, connect, clicked, graph->num_nodes);
+                add_edge(graph, connect, clicked, next_edge++);
         }
         connect = NULL;
     }

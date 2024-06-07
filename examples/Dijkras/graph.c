@@ -23,6 +23,9 @@ void add_node(struct Graph* graph, key_t key) {
     temp->x = 0;
     temp->y = 0;
     temp->r = 30;
+    temp->col[0] = 255;
+    temp->col[1] = 255;
+    temp->col[2] = 255;
 
     // add node to graph
     graph->LL = LL_add_node(graph->LL, temp);
@@ -39,9 +42,13 @@ void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight)
     struct Edge* edge = (struct Edge *) malloc( sizeof(struct Edge) );
     edge->next = n2;
     edge->weight = weight;
+    edge->col[0] = 255;
+    edge->col[1] = 255;
+    edge->col[2] = 255;
 
     // add to edge to n1 adj LL
     n1->adj = LL_add_node(n1->adj, edge);
+    
 }
 
 void remove_node(struct Graph* graph, struct Node* node) {
@@ -174,24 +181,28 @@ void display_graph(struct Graph* graph) {
     while (node_crawler) {
 
         struct Node* node = (struct Node *) node_crawler->data;
+
+        // displays the node
+        l_color(node->col[0],node->col[1],node->col[2], 0);
         l_circle(node->x, node->y, node->r);
 
-        l_color(0,0,255,0);
+        l_color(0,0,0,0);
         l_text(node->x, node->y, "%d", node->key);
-        l_color(255, 255, 255, 0);
 
         // now display the node's edges
         for (struct LL_node* edge_crawler = node->adj; edge_crawler; edge_crawler = edge_crawler->next) {
             struct Node* edge_node = ((struct Edge *) edge_crawler->data)->next;
             
-            display_edge(node, edge_node);
+            struct Edge* edge = (struct Edge *) edge_crawler->data;
+            l_color(edge->col[0], edge->col[1], edge->col[2], 0);
+            display_edge(node, edge_node, edge->weight);
         }
 
         node_crawler = node_crawler->next;
     }
 }
 
-void display_edge(struct Node* n1, struct Node* n2) {
+void display_edge(struct Node* n1, struct Node* n2, int weight) {
     float x1 = n1->x;
     float y1 = n1->y;
     float x2 = n2->x;
@@ -205,12 +216,17 @@ void display_edge(struct Node* n1, struct Node* n2) {
     float val = 1.0f / sqrt(3.0f);
 
     float a = atan2(y1-y2, x1-x2) + PI;
-
+    
     l_line(px,py, px-30.0f*cosf(a - val), py-30.0f*sinf(a - val));
     l_line(px,py, px-30.0f*cosf(a + val), py-30.0f*sinf(a + val));
     
-
     l_line(n1->x, n1->y, n2->x, n2->y);
+
+    // display edge weight
+    px = n2->x-h*cosf(a)/5*2;
+    py = n2->y-h*sinf(a)/5*2;
+    l_color(255,255,255,0);
+    l_text(px, py, "%d", weight);
 }
 
 void set_node_pos(struct Graph* graph) {
@@ -269,6 +285,9 @@ struct Node* get_clicked(struct Graph* graph, int x, int y) {
 }
 
 // ##########################################
-// MANIPULATE STRUCTURE OF GRAPH
+// DIJKSRAS ALGO
 // ##########################################
 
+void find_path(struct Node* start, struct Node* target) {
+    
+}

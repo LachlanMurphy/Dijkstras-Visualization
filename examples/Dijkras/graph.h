@@ -17,6 +17,9 @@ struct Edge {
 
     // weight of this edge
     int weight;
+
+    // color to draw edge
+    int col[3];
 };
 
 // defines a Node, or verticy in the graph
@@ -38,6 +41,9 @@ struct Node {
 
     // radius of the verticy circle on screen
     int r;
+
+    // color to draw node
+    int col[3];
 };
 
 // stores data of the graph
@@ -81,7 +87,7 @@ void destruct_graph(struct Graph* graph);
 void display_graph(struct Graph* graph);
 
 // displays an edge
-void display_edge(struct Node* n1, struct Node* n2);
+void display_edge(struct Node* n1, struct Node* n2, int weight);
 
 // called every time a node is added, resets all the screen positions of the nodes
 void set_node_pos(struct Graph* graph);
