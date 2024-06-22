@@ -1,9 +1,9 @@
 #include "LL.h"
 
-struct LL_node* LL_add_node(struct LL_node* root, void* data) {
+LL_node* LL_add_node(LL_node* root, void* data) {
 
     // init data
-    struct LL_node* toAdd = (struct LL_node *) malloc( sizeof(struct LL_node) );
+    LL_node* toAdd = (LL_node *) malloc( sizeof(LL_node) );
     toAdd->data = data;
 
     // if root is empty add to root
@@ -14,7 +14,7 @@ struct LL_node* LL_add_node(struct LL_node* root, void* data) {
     }
 
     // else crawl until end is reached
-    struct LL_node* crawler = root;
+    LL_node* crawler = root;
     while (crawler->next)
         crawler = crawler->next;
     
@@ -26,11 +26,11 @@ struct LL_node* LL_add_node(struct LL_node* root, void* data) {
 }
 
 
-struct LL_node* LL_remove_node(struct LL_node* root, struct LL_node* node) {
+LL_node* LL_remove_node(LL_node* root, LL_node* node) {
     // find node to remove
 
-    struct LL_node* crawler = root;
-    struct LL_node* prev = NULL;
+    LL_node* crawler = root;
+    LL_node* prev = NULL;
     while (crawler) {
         if (crawler == node) break;
         prev = crawler;
@@ -55,8 +55,8 @@ struct LL_node* LL_remove_node(struct LL_node* root, struct LL_node* node) {
     return root;
 }
 
-void LL_deconstruct(struct LL_node* root) {
-    struct LL_node* temp = root;
+void LL_deconstruct(LL_node* root) {
+    LL_node* temp = root;
     while (root) {
         temp = root;
         root = root->next;
@@ -65,8 +65,8 @@ void LL_deconstruct(struct LL_node* root) {
     }
 }
 
-void LL_print_list(struct LL_node* root) {
-    struct LL_node* crawler = root;
+void LL_print_list(LL_node* root) {
+    LL_node* crawler = root;
     while (crawler) {
         printf("%p -> ", crawler);
         crawler = crawler->next;

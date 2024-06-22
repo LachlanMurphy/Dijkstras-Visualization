@@ -4,15 +4,15 @@
 // START OF LIST ASSIST FUNCTIONS
 // ##########################################
 
-void init_graph(struct Graph* graph) {
+void init_graph(Graph* graph) {
     graph->LL = NULL;
     graph->num_nodes = 0;
 }
 
-void add_node(struct Graph* graph, key_t key) {
+void add_node(Graph* graph, key_t key) {
 
     // create new Node
-    struct Node* temp = (struct Node *) malloc( sizeof(struct Node) );
+    Node* temp = (Node *) malloc( sizeof(Node) );
 
     if (!temp)
         perror("malloc error in add_node\n");
@@ -36,10 +36,10 @@ void add_node(struct Graph* graph, key_t key) {
     set_node_pos(graph);
 }
 
-void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight) {
+void add_edge(Graph* graph, Node* n1, Node* n2, int weight) {
 
     // init data
-    struct Edge* edge = (struct Edge *) malloc( sizeof(struct Edge) );
+    Edge* edge = (Edge *) malloc( sizeof(Edge) );
     edge->next = n2;
     edge->weight = weight;
     edge->col[0] = 255;
@@ -51,17 +51,17 @@ void add_edge(struct Graph* graph, struct Node* n1, struct Node* n2, int weight)
     
 }
 
-void remove_node(struct Graph* graph, struct Node* node) {
+void remove_node(Graph* graph, Node* node) {
     // first remove all occurances of this node in other's edges
-    for (struct LL_node* node_crawler = graph->LL; node_crawler; node_crawler = node_crawler->next) {
-        struct Node* n = (struct Node *) node_crawler->data;
+    for (LL_node* node_crawler = graph->LL; node_crawler; node_crawler = node_crawler->next) {
+        Node* n = (Node *) node_crawler->data;
         
         // no need to check itself
         if (n == node)
             continue;
         
-        for (struct LL_node* edge_crawler = n->adj; edge_crawler; edge_crawler = edge_crawler->next) {
-            struct Edge* edge = (struct Edge *) edge_crawler->data;
+        for (LL_node* edge_crawler = n->adj; edge_crawler; edge_crawler = edge_crawler->next) {
+            Edge* edge = (Edge *) edge_crawler->data;
 
             if (edge->next == node) {
                 remove_edge(graph, n, node);
@@ -74,7 +74,7 @@ void remove_node(struct Graph* graph, struct Node* node) {
     LL_deconstruct(node->adj);
 
     // remove data from graph's LL
-    struct LL_node* crawler = graph->LL;
+    LL_node* crawler = graph->LL;
     while (crawler) {
         if (crawler->data == node) {
             // deallocate
@@ -96,12 +96,12 @@ void remove_node(struct Graph* graph, struct Node* node) {
     set_node_pos(graph);
 }
 
-void remove_edge(struct Graph* graph, struct Node* n1, struct Node* n2) {
+void remove_edge(Graph* graph, Node* n1, Node* n2) {
 
     // find edge in LL and remove
-    struct LL_node* crawler = n1->adj;
+    LL_node* crawler = n1->adj;
     while (crawler) {
-        struct Edge* tmp = (struct Edge *) crawler->data;
+        Edge* tmp = (Edge *) crawler->data;
         if (tmp->next == n2) {
             // remove this edge
             free(tmp);
@@ -113,12 +113,12 @@ void remove_edge(struct Graph* graph, struct Node* n1, struct Node* n2) {
     }
 }
 
-struct Node* search_node(struct Graph* graph, key_t key) {
+Node* search_node(Graph* graph, key_t key) {
     // search for node and return pointer to that node
-    struct LL_node* crawler = graph->LL;
+    LL_node* crawler = graph->LL;
     while (crawler) {
         // must cast to Node * because of void* for data
-        struct Node* tmp = (struct Node *) crawler->data;
+        Node* tmp = (Node *) crawler->data;
         if (tmp->key == key)
             return tmp;
         
@@ -128,21 +128,21 @@ struct Node* search_node(struct Graph* graph, key_t key) {
     return NULL;
 }
 
-void print_graph(struct Graph* graph) {
+void print_graph(Graph* graph) {
 
     if (!graph->LL){
         printf("Graph empty\n");
         return;
     }
 
-    struct LL_node* node_crawler = graph->LL;
+    LL_node* node_crawler = graph->LL;
     while (node_crawler) {
-        struct Node* node = (struct Node *) node_crawler->data;
+        Node* node = (Node *) node_crawler->data;
         printf("%d -> ", node->key);
 
-        struct LL_node* edge_crawler = node->adj;
+        LL_node* edge_crawler = node->adj;
         while (edge_crawler) {
-            struct Edge* edge = (struct Edge *) edge_crawler->data;
+            Edge* edge = (Edge *) edge_crawler->data;
 
             printf("%d, ", edge->next->key);
 
@@ -154,12 +154,12 @@ void print_graph(struct Graph* graph) {
     }
 }
 
-void destruct_graph(struct Graph* graph) {
-    struct LL_node* crawler = graph->LL;
+void destruct_graph(Graph* graph) {
+    LL_node* crawler = graph->LL;
 
     // remove all edges from all verticies
     while (crawler) {
-        struct Node* tmp = (struct Node *) crawler->data;
+        Node* tmp = (Node *) crawler->data;
         LL_deconstruct(tmp->adj);
         tmp->adj = NULL;
         crawler = crawler->next;
@@ -174,13 +174,13 @@ void destruct_graph(struct Graph* graph) {
 // START OF VISUAL FUNCTIONS
 // ##########################################
 
-void display_graph(struct Graph* graph) {
+void display_graph(Graph* graph) {
 
     // loop through each node and display
-    struct LL_node* node_crawler = graph->LL;
+    LL_node* node_crawler = graph->LL;
     while (node_crawler) {
 
-        struct Node* node = (struct Node *) node_crawler->data;
+        Node* node = (Node *) node_crawler->data;
 
         // displays the node
         l_color(node->col[0],node->col[1],node->col[2], 0);
@@ -190,10 +190,10 @@ void display_graph(struct Graph* graph) {
         l_text(node->x, node->y, "%d", node->key);
 
         // now display the node's edges
-        for (struct LL_node* edge_crawler = node->adj; edge_crawler; edge_crawler = edge_crawler->next) {
-            struct Node* edge_node = ((struct Edge *) edge_crawler->data)->next;
+        for (LL_node* edge_crawler = node->adj; edge_crawler; edge_crawler = edge_crawler->next) {
+            Node* edge_node = ((Edge *) edge_crawler->data)->next;
             
-            struct Edge* edge = (struct Edge *) edge_crawler->data;
+            Edge* edge = (Edge *) edge_crawler->data;
             l_color(edge->col[0], edge->col[1], edge->col[2], 0);
             display_edge(node, edge_node, edge->weight);
         }
@@ -202,7 +202,7 @@ void display_graph(struct Graph* graph) {
     }
 }
 
-void display_edge(struct Node* n1, struct Node* n2, int weight) {
+void display_edge(Node* n1, Node* n2, int weight) {
     float x1 = n1->x;
     float y1 = n1->y;
     float x2 = n2->x;
@@ -229,7 +229,7 @@ void display_edge(struct Node* n1, struct Node* n2, int weight) {
     l_text(px, py, "%d", weight);
 }
 
-void set_node_pos(struct Graph* graph) {
+void set_node_pos(Graph* graph) {
     int columns = 1;
     int rows = 1;
 
@@ -248,14 +248,14 @@ void set_node_pos(struct Graph* graph) {
     
     // Distribute points
     int col, row;
-    struct LL_node* crawler = graph->LL;
+    LL_node* crawler = graph->LL;
     for (row = 1; row <= rows; row++) {
         for (col = 1; col <= columns; col++) {
             if (!crawler) {
                 return;
             }
             
-            struct Node* node = (struct Node *) crawler->data;
+            Node* node = (Node *) crawler->data;
             node->x = col * xGap;
             node->y = row * yGap;
             crawler = crawler->next;
@@ -263,9 +263,9 @@ void set_node_pos(struct Graph* graph) {
     }
 }
 
-struct Node* get_clicked(struct Graph* graph, int x, int y) {
-    for (struct LL_node* crawler = graph->LL; crawler; crawler = crawler->next) {
-        struct Node* node = (struct Node *) crawler->data;
+Node* get_clicked(Graph* graph, int x, int y) {
+    for (LL_node* crawler = graph->LL; crawler; crawler = crawler->next) {
+        Node* node = (Node *) crawler->data;
 
         if (dis(x,y,node->x, node->y) <= node->r) {
             return node;
@@ -274,9 +274,9 @@ struct Node* get_clicked(struct Graph* graph, int x, int y) {
     return NULL;
 }
 
- int edge_exist(struct Node* n1, struct Node* n2) {
-    for (struct LL_node* crawler = n1->adj; crawler; crawler = crawler->next) {
-        struct Edge* edge = (struct Edge *) crawler->data;
+ int edge_exist(Node* n1, Node* n2) {
+    for (LL_node* crawler = n1->adj; crawler; crawler = crawler->next) {
+        Edge* edge = (Edge *) crawler->data;
         if (edge->next == n2)
             return 1;
     }
@@ -288,6 +288,45 @@ struct Node* get_clicked(struct Graph* graph, int x, int y) {
 // DIJKSRAS ALGO
 // ##########################################
 
-void find_path(struct Node* start, struct Node* target) {
-    
+void find_path(Graph* graph, Node* start, Node* target) {
+    // reset all visited flags
+    reset_visited(graph);
+
+    // init PQ
+    PQ pq;
+    PQ_init(&pq);
+
+    Node* curr = start;
+    while (1) {
+        printf("%d\n", curr->key);
+        curr->visited = true;
+
+        // add all current edges to the queue
+        for (LL_node* crawler = curr->adj; crawler; crawler = crawler->next) {
+            Edge* edge = (Edge *) crawler->data;
+            
+            if (edge->next->visited)
+                continue;
+            
+            enqueue(&pq, edge, edge->weight);
+        }
+
+        if (isEmpty(&pq))
+            break;
+
+        PQ_node* pq_node = dequeue(&pq);
+        Edge* edge = (Edge *) pq_node->data;
+
+        curr = edge->next;
+    }
+
+    PQ_gc(&pq);
+
+}
+
+void reset_visited(Graph* graph) {
+    for (LL_node* crawler = graph->LL; crawler; crawler = crawler->next) {
+        Node* node = (Node *) crawler->data;
+        node->visited = 0;
+    }
 }

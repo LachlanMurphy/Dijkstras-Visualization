@@ -9,9 +9,9 @@
 
 #define PI 3.141592654
 
-struct Graph* graph;
+Graph* graph;
 
-struct Node* connect = NULL;
+Node* connect = NULL;
 
 bool del = false;
 
@@ -21,7 +21,7 @@ int next_edge = 0;
 void setup() {
     size(500,500);
 
-    graph = (struct Graph *) malloc( sizeof(struct Graph) );
+    graph = (Graph *) malloc( sizeof(Graph) );
     
     if (!graph)
         perror("malloc error in setup\n");
@@ -68,6 +68,13 @@ void keypressed(unsigned char c, int x, int y) {
         case '\b': {
             del = true;
         } break;
+        case 'd': {
+            if (graph->num_nodes > 1) {
+                Node* start = search_node(graph, 0);
+                Node* end = search_node(graph, next_id-1);
+                find_path(graph, start, end);
+            }
+        } break;
     }
 }
 
@@ -81,7 +88,7 @@ void keyup(unsigned char c, int x, int y) {
 }
 
 void mouseUpdate(int button, int mouse_up, int x, int y) {
-    struct Node* clicked = get_clicked(graph, x, y);
+    Node* clicked = get_clicked(graph, x, y);
 
     if (del && clicked && !mouse_up) {
         remove_node(graph, clicked);

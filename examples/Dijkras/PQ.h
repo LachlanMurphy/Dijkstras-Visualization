@@ -7,14 +7,12 @@
 typedef struct {
     void* data;
     int priority;
-    PQ_node* parent;
-    PQ_node* left;
-    PQ_node* right;
 } PQ_node;
 
 typedef struct {
-    PQ_node* root;
+    PQ_node** tree;
     unsigned int size;
+    unsigned int capacity;
 } PQ;
 
 void PQ_init(PQ* pq);
@@ -26,6 +24,15 @@ int isEmpty(PQ *pq);
 void enqueue(PQ *pq, void* data, int priority);
 
 // Function to remove and return the highest priority element from the priority queue
-PQ_node dequeue(PQ *pq);
+PQ_node* dequeue(PQ *pq);
+
+// maintain structure of heap upward
+void heapifyUp(PQ* pq, int pos);
+
+// maintain structure of heap downward
+void heapifyDown(PQ* pq, int pos);
+
+// deallocated memory
+PQ_gc(PQ* pq);
 
 #endif // PQ_H
