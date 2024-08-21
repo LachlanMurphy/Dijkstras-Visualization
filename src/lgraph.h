@@ -61,6 +61,4 @@ void l_text(float x, float y, char *format,...);
 
 double dis(double x1, double y1, double x2, double y2);
 
-int main(int argc, char* argv[]);
-
 #endif // LGRAPH_H

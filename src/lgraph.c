@@ -118,9 +118,3 @@ double dis(double x1, double y1, double x2, double y2) {
     double value = sqrt(sum);
     return value;
 }
-
-int main(int argc, char* argv[])
-{
-    setup();
-    l_init(&argc, argv);
-}
