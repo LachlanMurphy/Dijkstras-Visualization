@@ -12,11 +12,11 @@
 Graph* graph;
 
 Node* connect = NULL;
+Edge* last_edge = NULL;
 
 bool del = false;
 
 int next_id = 0;
-int next_edge = 0;
 
 void setup() {
     size(500,500);
@@ -72,9 +72,17 @@ void keypressed(unsigned char c, int x, int y) {
             if (graph->num_nodes > 1) {
                 Node* start = search_node(graph, 0);
                 Node* end = search_node(graph, next_id-1);
-                find_path(graph, start, end);
+                find_dis(graph, start, end);
             }
         } break;
+        case 'p': {
+            if (last_edge)
+                last_edge->weight++;
+        } break;
+        case 'l': {
+            if (last_edge && last_edge->weight > 0)
+                last_edge->weight--;
+        }
     }
 }
 
@@ -102,10 +110,12 @@ void mouseUpdate(int button, int mouse_up, int x, int y) {
     if (mouse_up && connect) {
         if (clicked && connect != clicked) {
             
-            if (edge_exist(connect, clicked))
+            if (edge_exist(connect, clicked)) {
                 remove_edge(graph, connect, clicked);
-            else
-                add_edge(graph, connect, clicked, next_edge++);
+                last_edge = NULL;
+            } else {
+                last_edge = add_edge(graph, connect, clicked, 0);
+            }
         }
         connect = NULL;
     }

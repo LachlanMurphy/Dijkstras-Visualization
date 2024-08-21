@@ -6,13 +6,14 @@
 
 #include "LL.h"
 #include "PQ.h"
+#include "tree.h"
 #include "../../src/lgraph.h"
 
 // typed for the key for each verticy, or node, in the graph
 typedef int key_t;
 
 // defines a Node, or verticy in the graph
-typedef struct node_t {
+typedef struct node_tag {
     // key to identify this graph node
     key_t key;
 
@@ -63,10 +64,10 @@ void init_graph(Graph* graph);
 void print_graph(Graph* graph);
 
 // adds a node to the graph with no initial edges
-void add_node(Graph* graph, key_t key);
+Node* add_node(Graph* graph, key_t key);
 
 // adds an edge from n1 to n2
-void add_edge(Graph* graph, Node* n1, Node* n2, int weight);
+Edge* add_edge(Graph* graph, Node* n1, Node* n2, int weight);
 
 // removes and frees the memory of a graph node
 void remove_node(Graph* graph, Node* node);
@@ -100,7 +101,7 @@ Node* get_clicked(Graph* graph, int x, int y);
 int edge_exist(Node* n1, Node* n2);
 
 // finds the shortest path between two nodes
-void find_path(Graph* graph, Node* start, Node* target);
+void find_dis(Graph* graph, Node* start, Node* target);
 
 // sets all nodes in the graph to unvisited
 void reset_visited(Graph* graph);

@@ -33,6 +33,6 @@ void heapifyUp(PQ* pq, int pos);
 void heapifyDown(PQ* pq, int pos);
 
 // deallocated memory
-PQ_gc(PQ* pq);
+void PQ_gc(PQ* pq);
 
 #endif // PQ_H

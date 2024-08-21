@@ -9,7 +9,7 @@ void init_graph(Graph* graph) {
     graph->num_nodes = 0;
 }
 
-void add_node(Graph* graph, key_t key) {
+Node* add_node(Graph* graph, key_t key) {
 
     // create new Node
     Node* temp = (Node *) malloc( sizeof(Node) );
@@ -34,9 +34,11 @@ void add_node(Graph* graph, key_t key) {
     graph->num_nodes++;
 
     set_node_pos(graph);
+
+    return temp;
 }
 
-void add_edge(Graph* graph, Node* n1, Node* n2, int weight) {
+Edge* add_edge(Graph* graph, Node* n1, Node* n2, int weight) {
 
     // init data
     Edge* edge = (Edge *) malloc( sizeof(Edge) );
@@ -48,7 +50,7 @@ void add_edge(Graph* graph, Node* n1, Node* n2, int weight) {
 
     // add to edge to n1 adj LL
     n1->adj = LL_add_node(n1->adj, edge);
-    
+    return edge;
 }
 
 void remove_node(Graph* graph, Node* node) {
@@ -288,17 +290,34 @@ Node* get_clicked(Graph* graph, int x, int y) {
 // DIJKSRAS ALGO
 // ##########################################
 
-void find_path(Graph* graph, Node* start, Node* target) {
+void find_dis(Graph* graph, Node* start, Node* target) {
     // reset all visited flags
     reset_visited(graph);
+
+    // init tree to keep track of path taken
+    Tree tree;
+    init_tree(&tree);
+    tree_add_node(&tree, NULL, start->key);
 
     // init PQ
     PQ pq;
     PQ_init(&pq);
 
     Node* curr = start;
+    int last_priority = 0;
     while (1) {
-        printf("%d\n", curr->key);
+        if (curr == target) {
+            printf("Shortest Distance: %d\n", last_priority);
+            printf("Shortest Path: ");
+
+            Tree_node* crawler = tree_search_node(&tree, curr->key);
+            while (crawler) {
+                printf("%d <- ", crawler->key);
+                crawler = crawler->parent;
+            }
+            printf("root\n");
+            break;
+        }
         curr->visited = true;
 
         // add all current edges to the queue
@@ -308,20 +327,26 @@ void find_path(Graph* graph, Node* start, Node* target) {
             if (edge->next->visited)
                 continue;
             
-            enqueue(&pq, edge, edge->weight);
+            // enqueue next node
+            enqueue(&pq, edge, edge->weight + last_priority);
+
+            // add path to tree
+            Tree_node* searched = tree_search_node(&tree, curr->key); 
+            tree_add_node(&tree, searched, edge->next->key);
         }
 
         if (isEmpty(&pq))
             break;
 
         PQ_node* pq_node = dequeue(&pq);
+        last_priority = pq_node->priority;
         Edge* edge = (Edge *) pq_node->data;
 
         curr = edge->next;
     }
 
+    Tree_gc(&tree);
     PQ_gc(&pq);
-
 }
 
 void reset_visited(Graph* graph) {

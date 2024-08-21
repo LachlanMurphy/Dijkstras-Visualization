@@ -105,6 +105,6 @@ void heapifyDown(PQ* pq, int pos) {
     }
 }
 
-PQ_gc(PQ* pq) {
+void PQ_gc(PQ* pq) {
     free(pq->tree);
 }
