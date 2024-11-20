@@ -1,5 +1,7 @@
 # Dijkstra's Algorithm Visualization
 
+![alt text](https://github.com/LachlanMurphy/Dijkstras-Visualization/blob/main/image.png)
+
 ## Quick Start
 
 ```
