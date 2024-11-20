@@ -106,4 +106,7 @@ void find_dis(Graph* graph, Node* start, Node* target);
 // sets all nodes in the graph to unvisited
 void reset_visited(Graph* graph);
 
+// colors the edge between two nodes assuming it exists
+void color_edge(Graph* graph, int start, int target);
+
 #endif // GRAPH_H

@@ -227,7 +227,7 @@ void display_edge(Node* n1, Node* n2, int weight) {
     // display edge weight
     px = n2->x-h*cosf(a)/5*2;
     py = n2->y-h*sinf(a)/5*2;
-    l_color(255,255,255,0);
+    // l_color(255,255,255,0);
     l_text(px, py, "%d", weight);
 }
 
@@ -311,7 +311,12 @@ void find_dis(Graph* graph, Node* start, Node* target) {
             printf("Shortest Path: ");
 
             Tree_node* crawler = tree_search_node(&tree, curr->key);
+            int prev = -1;
             while (crawler) {
+                if (prev != -1) {
+                    color_edge(graph, crawler->key, prev);
+                }
+                prev = crawler->key;
                 printf("%d <- ", crawler->key);
                 crawler = crawler->parent;
             }
@@ -353,5 +358,28 @@ void reset_visited(Graph* graph) {
     for (LL_node* crawler = graph->LL; crawler; crawler = crawler->next) {
         Node* node = (Node *) crawler->data;
         node->visited = 0;
+    }
+}
+
+void color_edge(Graph* graph, int start, int target) {
+    LL_node* node_crawler = graph->LL;
+    while (node_crawler) {
+        Node* node = (Node *) node_crawler->data;
+        if (node->key == start) {
+            LL_node* edge_crawler = node->adj;
+            while (edge_crawler) {
+                Edge* edge = (Edge *) edge_crawler->data;
+                if (edge->next->key == target) {
+                    edge->col[0] = 0;
+                    edge->col[1] = 255;
+                    edge->col[2] = 0;
+                    return;
+                }
+
+                edge_crawler = edge_crawler->next;
+            }
+        }
+
+        node_crawler = node_crawler->next;
     }
 }

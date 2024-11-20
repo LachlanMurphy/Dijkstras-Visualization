@@ -51,6 +51,6 @@ void tree_gc_helper(Tree_node* curr) {
         tree_gc_helper(curr->children[i]);
     }
 
-    free(curr->children);
+    // free(curr->children);
     free(curr);
 }
