@@ -7,7 +7,7 @@
 #include "LL.h"
 #include "PQ.h"
 #include "tree.h"
-#include "../../src/lgraph.h"
+#include "../lgraph/lgraph.h"
 
 // typed for the key for each verticy, or node, in the graph
 typedef int key_t;

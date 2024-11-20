@@ -5,7 +5,7 @@
 #include <malloc.h>
 
 #include "graph.h"
-#include "../../src/lgraph.h"
+#include "../lgraph/lgraph.h"
 
 #define PI 3.141592654
 
